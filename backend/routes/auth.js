@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { z } = require("zod");
-const { UserModel } = require("../database/db");
+const { UsersModel } = require("../database/db");
 const router = express.Router();
 require("dotenv").config();
 
@@ -14,7 +14,16 @@ router.post("/signup", async (req, res) => {
     username: z.string().min(6).max(30),
     email: z.string().min(6).max(100).email(),
     password: z.string().min(8).max(30),
-    phoneno: z.string().min(10).max(10),
+    phone_no: z.string().min(10).max(10),
+    address: z.array(
+      z.object({
+        street: z.string(),
+        country: z.string(),
+        state: z.string(),
+        area: z.string(),
+        landmark: z.string()
+      })
+    )
   });
 
   const parsedData = requiredBody.safeParse(req.body);
@@ -23,10 +32,10 @@ router.post("/signup", async (req, res) => {
       message: "Incorrect signup Format  ",
     });
   }
-  const { username, email, password, phoneno } = parsedData.data;
+  const { username, email, password, phone_no, address } = parsedData.data;
 
   try {
-    const userExists = await UserModel.findOne({ email });
+    const userExists = await UsersModel.findOne({ email });
     if (userExists) {
       return res.status(409).json({
         message: "Email Already Exists",
@@ -34,11 +43,12 @@ router.post("/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 5);
-    await UserModel.create({
+    await UsersModel.create({
       name: username,
       email: email,
       password: hashedPassword,
-      phoneno : phoneno
+      phone_no: phone_no,
+      address: address
     });
     res.json({
       message: "Account Created Successfully.",
@@ -56,7 +66,7 @@ router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await UserModel.findOne({ email });
+    const user = await UsersModel.findOne({ email });
     if (!user) {
       return res.status(400).send({
         message: "Email Not Found",

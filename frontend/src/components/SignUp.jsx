@@ -23,7 +23,7 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:3000/auth/signup`, formData);
+      const response = await axios.post(`http://localhost:4000/auth/signup`, formData);
 
       if (response.status === 200) {
         toast.success('Account Created Successfully');

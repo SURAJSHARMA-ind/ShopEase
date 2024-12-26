@@ -18,8 +18,8 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const [productRes, categoryRes] = await Promise.all([
-        fetch('http://localhost:3000/products'),
-        fetch('http://localhost:3000/products')
+        fetch('http://localhost:4000/products'),
+        fetch('http://localhost:4000/products')
       ]);
 
       const [productData, categoryData] = await Promise.all([

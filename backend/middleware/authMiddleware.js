@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const UserModel = require('../database/db')
+const UsersModel = require('../database/db')
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -17,7 +17,7 @@ const authMiddleware = async (req, res, next) => {
     const userid = userDetail.id;
     console.log("userid is ",userid);
     
-    const userExists = await UserModel.findOne({ _id: userid });
+    const userExists = await UsersModel.findOne({ _id: userid });
     if (!userExists) {
       return res.status(404).send({
         message: "Invalid Token",

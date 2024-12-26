@@ -1,6 +1,6 @@
 
 export const fetchApi = async () => {
-  const url = "http://localhost:3000/products";
+  const url = "http://localhost:4000/products";
   try {
     const res = await fetch(url);
     if (res.status!=200) {
