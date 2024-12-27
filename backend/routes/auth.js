@@ -35,10 +35,15 @@ router.post("/signup", async (req, res) => {
   const { username, email, password, phone_no, address } = parsedData.data;
 
   try {
-    const userExists = await UsersModel.findOne({ email });
-    if (userExists) {
+    const emailExists = await UsersModel.findOne({ email });
+    const phone_noExists = await UsersModel.findOne({ phone_no });
+    console.log(emailExists);
+    console.log("email exist ",emailExists.email)
+    console.log(phone_noExists);
+    console.log("phone exits ",phone_noExists.phone_no)
+    if (emailExists && phone_noExists) {
       return res.status(409).json({
-        message: "Email Already Exists",
+        message: "User Already Exists",
       });
     }
 
@@ -54,6 +59,7 @@ router.post("/signup", async (req, res) => {
       message: "Account Created Successfully.",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Server error occurred",
       error: error.message,

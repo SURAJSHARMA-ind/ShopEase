@@ -5,7 +5,7 @@ const ObjectId = Schema.Types.ObjectId
 const Users = new Schema({
   name: { type: String, required: true },
   email: { type: String, unique: true, required: true },
-  phone_no: { type: Number, required: true, unique: true },
+  phone_no: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   address: [{
     street: { type: String, required: true },
