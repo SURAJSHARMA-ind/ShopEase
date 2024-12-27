@@ -37,11 +37,10 @@ router.post("/signup", async (req, res) => {
   try {
     const emailExists = await UsersModel.findOne({ email });
     const phone_noExists = await UsersModel.findOne({ phone_no });
-    console.log(emailExists);
-    console.log("email exist ",emailExists.email)
-    console.log(phone_noExists);
-    console.log("phone exits ",phone_noExists.phone_no)
-    if (emailExists && phone_noExists) {
+
+    console.log(emailExists ? emailExists.email : "email not exit");
+    console.log(phone_noExists ? phone_noExists.phone_no : "phone_no not exit");
+    if (phone_noExists || emailExists) {
       return res.status(409).json({
         message: "User Already Exists",
       });
