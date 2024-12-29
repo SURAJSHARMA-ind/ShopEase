@@ -1,15 +1,16 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { z } = require("zod");
-const { UsersModel } = require("../database/db");
+import express, { Request, Response } from "express"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import { z } from "zod"
+import { UsersModel } from "../database/db"
 const router = express.Router();
-require("dotenv").config();
+import dotenv from "dotenv"
+dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET: String = process.env.JWT_SECRET
 
 // Signup Route
-router.post("/signup", async (req, res) => {
+router.post("/signup", async (req: Request, res: Response) => {
   const requiredBody = z.object({
     username: z.string().min(6).max(30),
     email: z.string().min(6).max(100).email(),
@@ -67,8 +68,8 @@ router.post("/signup", async (req, res) => {
 });
 
 // Signin Route
-router.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
+router.post("/signin", async (req: Request, res: Response) => {
+  const { phone_no, email, password } = req.body;
 
   try {
     const user = await UsersModel.findOne({ email });

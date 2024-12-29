@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId
 
@@ -81,4 +81,4 @@ const ProductsModel = mongoose.model("products", Products);
 const CartModel = mongoose.model("cart", Cart);
 const OrderModel = mongoose.model("order", Order);
 
-module.exports = { UsersModel, ProductsModel, AdminModel, CartModel, OrderModel };
+export { UsersModel, ProductsModel, AdminModel, CartModel, OrderModel };

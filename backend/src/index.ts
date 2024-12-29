@@ -1,10 +1,10 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express"
+import cors from "cors"
 const hostname = "localhost";
-const products = require("./products");
+import product from "./products"
 const port = 4000;
 const app = express();
-const authRoutes =require('./routes/auth')
+import authRoutes from './routes/auth'
 const mongoose = require("mongoose")
 
 const connectionString = process.env.MONGODB_URI;

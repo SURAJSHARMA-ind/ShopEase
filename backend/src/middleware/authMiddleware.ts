@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const UsersModel = require('../database/db')
+import jsonwebtoken from "jsonwebtoken"
+import  UsersModel  from '../database/db
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
