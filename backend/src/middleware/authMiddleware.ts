@@ -1,5 +1,5 @@
 import jsonwebtoken from "jsonwebtoken"
-import  UsersModel  from '../database/db
+import  UsersModel  from '../database/db'
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;

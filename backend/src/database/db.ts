@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId
+import {IOrder,IProduct,ICart,IUser,IAdmin} from "./dbTypes"
 
-const Users = new Schema({
+const Users = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, unique: true, required: true },
   phone_no: { type: String, unique: true, required: true },
@@ -19,10 +20,10 @@ const Users = new Schema({
   timestamps: true // Automatically adds `createdAt` and `updatedAt`
 });
 
-const Admin = new Schema({
+const Admin = new Schema<IAdmin>({
   name: { type: String, required: true },
   email: { type: String, unique: true, required: true },
-  phone_no: { type: Number, required: true, unique: true },
+  phone_no: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true },
 }, {
@@ -30,40 +31,40 @@ const Admin = new Schema({
 }
 );
 
-const Products = new Schema({
+const Products = new Schema<IProduct>({
   product_id: { type: ObjectId, ref: 'admin' },
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
+  stock: { type: Number, required: true },
   images: [
     {
       id: { type: String, required: true },
       url: { type: String, required: true }
     }
-  ],
-  stock: { type: Number, required: true }
+  ]
 }
   , { timestamps: true }
 );
 
-const Cart = new Schema({
+const Cart = new Schema<ICart>({
   cart_id: { type: ObjectId, ref: 'users' },
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
   images: [
     {
       id: { type: String, required: true },
       url: { type: String, required: true }
     }
   ],
-  quantity: { type: Number, required: true }
 });
 
-const Order = new Schema({
+const Order = new Schema<IOrder>({
   order_id: { type: ObjectId, ref: 'users' },
   price: { type: Number, require: true },
-  itmes: [{
+  items:[{
     product_id: { type: String, require: true },
     name: { type: String, require: true },
     quantity: { type: Number, required: true },
