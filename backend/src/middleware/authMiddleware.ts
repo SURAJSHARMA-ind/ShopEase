@@ -1,27 +1,41 @@
-import jsonwebtoken from "jsonwebtoken"
-import  UsersModel  from '../database/db'
+import jwt from "jsonwebtoken"
+import { UsersModel } from '../database/db'
 require("dotenv").config();
+import { Request, Response, NextFunction } from "express";
+
+    interface IuserDetail {
+      id: string
+    }
+    interface IcustomReq extends Request{
+      userid :string
+    }
 
 const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("Jwt Secret not present")
+}
 
-const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req: IcustomReq, res: Response, next: NextFunction) => {
   const token = req.headers["authorization"];
   if (!token) {
-    return res.send({
+     res.send({
       message: "Token is missing",
     });
+    return
   }
   try {
-    const userDetail = jwt.verify(token, JWT_SECRET);
-    req.userid = userDetail.id
+
+    const userDetail = jwt.verify(token, JWT_SECRET) as IuserDetail;
     const userid = userDetail.id;
-    console.log("userid is ",userid);
-    
+    req.userid = userid
+    console.log("userid is ", userid);
+
     const userExists = await UsersModel.findOne({ _id: userid });
     if (!userExists) {
-      return res.status(404).send({
+       res.status(404).send({
         message: "Invalid Token",
       });
+      return
     }
     next();
   } catch (error) {
@@ -29,4 +43,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;

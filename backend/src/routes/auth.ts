@@ -1,18 +1,23 @@
 import express, { Request, Response } from "express"
+import dotenv from "dotenv"
+dotenv.config();
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { z } from "zod"
 import { UsersModel } from "../database/db"
-const router = express.Router();
-import dotenv from "dotenv"
-dotenv.config();
 
-const JWT_SECRET: String = process.env.JWT_SECRET || "OISNus9h3kwjfdqwn-d9j"
+const router = express.Router();
+
+const JWT_SECRET = process.env.JWT_SECRET
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET not Found")
+}
 
 // Signup Route
-router.post("/signup", async (req: Request, res: Response) => {
+router.post("/signup", async (req: Request, res:Response) => {
+  // Zod Validation
   const requiredBody = z.object({
-    username: z.string().min(6).max(30),
+    name: z.string().min(6).max(30),
     email: z.string().min(6).max(100).email(),
     password: z.string().min(8).max(30),
     phone_no: z.string().min(10).max(10),
@@ -29,27 +34,29 @@ router.post("/signup", async (req: Request, res: Response) => {
 
   const parsedData = requiredBody.safeParse(req.body);
   if (!parsedData.success) {
-    return res.status(400).json({
+     res.status(400).json({
       message: "Incorrect signup Format  ",
     });
+    return
   }
-  const { username, email, password, phone_no, address } = parsedData.data;
+  const { name, email, password, phone_no, address } = parsedData.data ;
 
   try {
     const emailExists = await UsersModel.findOne({ email });
     const phone_noExists = await UsersModel.findOne({ phone_no });
 
-    console.log(emailExists ? emailExists.email : "email not exit");
-    console.log(phone_noExists ? phone_noExists.phone_no : "phone_no not exit");
+    // console.log(emailExists ? emailExists.email : "email not exit");
+    // console.log(phone_noExists ? phone_noExists.phone_no : "phone_no not exit");
     if (phone_noExists || emailExists) {
-      return res.status(409).json({
+       res.status(409).json({
         message: "User Already Exists",
       });
+      return
     }
 
     const hashedPassword = await bcrypt.hash(password, 5);
     await UsersModel.create({
-      name: username,
+      name: name,
       email: email,
       password: hashedPassword,
       phone_no: phone_no,
@@ -60,30 +67,38 @@ router.post("/signup", async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
+     res.status(500).json({
       message: "Server error occurred",
-      error: error.message,
     });
+    return
   }
 });
 
+
 // Signin Route
+
 router.post("/signin", async (req: Request, res: Response) => {
-  const { phone_no, email, password } = req.body;
+  const { email, password }  = req.body;
+// Use zod
+
+
+
 
   try {
     const user = await UsersModel.findOne({ email });
     if (!user) {
-      return res.status(400).send({
+       res.status(400).send({
         message: "Email Not Found",
       });
+      return
     }
 
     const passwordCheck = await bcrypt.compare(password, user.password);
     if (!passwordCheck) {
-      return res.status(403).send({
-        message: "Invalid username or Password",
+       res.status(403).send({
+        message: "Invalid name or Password",
       });
+      return
     }
 
     const token = jwt.sign(
@@ -100,10 +115,14 @@ router.post("/signin", async (req: Request, res: Response) => {
       token: token,
     });
   } catch (error) {
-    return res.status(500).send({
+     res.status(500).send({
       message: `Error occurred ${error}`,
     });
+    return
   }
 });
 
-module.exports = router;
+
+export default router;
+
+
