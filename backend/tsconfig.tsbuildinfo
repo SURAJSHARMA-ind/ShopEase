@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/products.ts","./src/database/db.ts","./src/database/dbtypes.ts","./src/middleware/authmiddleware.ts","./src/routes/auth.ts"],"version":"5.7.2"}
+{"root":["./src/index.ts","./src/products.ts","./src/database/db.ts","./src/database/dbtypes.ts","./src/middleware/authmiddleware.ts","./src/routes/adminroutes.ts","./src/routes/auth.ts","./src/validations/uservalidation.ts"],"version":"5.7.2"}

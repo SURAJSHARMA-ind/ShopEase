@@ -4,6 +4,7 @@ import cors from "cors"
 import products from "./products"
 import authRoutes from './routes/auth'
 
+
 const app = express();
 const connectionString = process.env.MONGODB_URI;
 const port =  process.env.PORT || 4000;
@@ -25,7 +26,7 @@ app.get("/products", (req, res) => {
   res.send(products);
 });
 // User signup & Signin route
-app.use("/auth", authRoutes);
+app.use("/api/v1/user", authRoutes);
 
 app.listen(port, () => {
   console.log(`Server is listening at : http://${hostname}:${port}/`);

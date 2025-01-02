@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 dotenv.config();
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { z } from "zod"
+import { requiredSignup, requiredSignin } from "../validations/userValidation"
 import { UsersModel } from "../database/db"
 
 const router = express.Router();
@@ -15,24 +15,8 @@ if (!JWT_SECRET) {
 
 // Signup Route
 router.post("/signup", async (req: Request, res: Response) => {
-  // Zod Validation
-  const requiredBody = z.object({
-    name: z.string().min(6).max(30),
-    email: z.string().min(6).max(320).email(),
-    password: z.string().min(8).max(30),
-    phone_no: z.string().min(10).max(10),
-    address: z.array(
-      z.object({
-        street: z.string(),
-        country: z.string(),
-        state: z.string(),
-        area: z.string(),
-        landmark: z.string()
-      })
-    )
-  });
 
-  const parsedData = requiredBody.safeParse(req.body);
+  const parsedData = requiredSignup.safeParse(req.body);
   if (!parsedData.success) {
     res.status(400).json({
       message: "Incorrect signup Format  ",
@@ -78,11 +62,7 @@ router.post("/signup", async (req: Request, res: Response) => {
 // Signin Route
 
 router.post("/signin", async (req: Request, res: Response) => {
-  const requiredSignin = z.object({
-    email: z.string().max(320).email(),
-    password: z.string().min(8).max(30)
 
-  })
   const parsedSignin = requiredSignin.safeParse(req.body)
 
   if (!parsedSignin.success) {
