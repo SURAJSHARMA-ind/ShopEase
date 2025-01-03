@@ -17,7 +17,7 @@ import mongoose  from "mongoose"
 }
 
 interface IAdmin extends IUser {
-    role : string
+    role : "admin"|"seller"
 }
  interface IImages {
     id: string,

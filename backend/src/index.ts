@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors"
 import products from "./products"
 import authRoutes from './routes/auth'
+import adminRoutes from "./routes/adminRoutes"
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.get("/products", (req, res) => {
 });
 // User signup & Signin route
 app.use("/api/v1/user", authRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.listen(port, () => {
   console.log(`Server is listening at : http://${hostname}:${port}/`);
