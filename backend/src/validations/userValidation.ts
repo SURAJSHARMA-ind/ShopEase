@@ -22,4 +22,13 @@ const requiredSignin = z.object({
 
 })
 
-export  {requiredSignup,requiredSignin}
+
+const adminSignup = requiredSignup.extend({
+    role: z.enum(["admin", "seller"])
+})
+const adminSignin = requiredSignin.extend({
+    role: z.enum(["admin", "seller"])
+})
+
+
+export { requiredSignup, requiredSignin, adminSignup, adminSignin }

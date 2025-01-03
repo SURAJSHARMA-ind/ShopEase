@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId
-import {IOrder,IProduct,ICart,IUser,IAdmin} from "./dbTypes"
+import { IOrder, IProduct, ICart, IUser, IAdmin } from "./dbTypes"
 
 const Users = new Schema<IUser>({
   name: { type: String, required: true },
@@ -26,6 +26,14 @@ const Admin = new Schema<IAdmin>({
   phone_no: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true },
+  address: [{
+    street: { type: String, required: true },
+    country: { type: String, required: true },
+    state: { type: String, required: true },
+    area: { type: String, required: true },
+    landmark: { type: String, required: true }
+  }
+  ]
 }, {
   timestamps: true
 }
@@ -64,7 +72,7 @@ const Cart = new Schema<ICart>({
 const Order = new Schema<IOrder>({
   order_id: { type: ObjectId, ref: 'users' },
   price: { type: Number, require: true },
-  items:[{
+  items: [{
     product_id: { type: String, require: true },
     name: { type: String, require: true },
     quantity: { type: Number, required: true },
