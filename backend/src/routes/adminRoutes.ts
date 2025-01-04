@@ -3,13 +3,14 @@ import { adminSignup, adminSignin } from "../validations/userValidation"
 import { AdminModel } from "../database/db"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import adminMiddleware from "../middleware/adminMiddleware"
 const router = Router()
-const JWT_SECRET = process.env.JWT_SECRET
-if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET not Found")
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET
+if (!ADMIN_JWT_SECRET) {
+    throw new Error("ADMIN_JWT_SECRET not Found")
 }
 
-router.post("/signup", async (req: Request, res: Response) => {
+router.post("/create",adminMiddleware, async (req: Request, res: Response) => {
     const parsedValue = adminSignup.safeParse(req.body)
     if (!parsedValue.success) {
         res.status(400).json({
@@ -87,7 +88,7 @@ router.post("/signin", async (req: Request, res: Response) => {
         {
             id: admin._id,
         },
-        JWT_SECRET,
+        ADMIN_JWT_SECRET,
         { expiresIn: "10d" }
     );
     res.send({
@@ -96,7 +97,7 @@ router.post("/signin", async (req: Request, res: Response) => {
         token: token,
     });
 }catch(error){
-    res.status(500).json({
+    res.status(500).json({ 
         message : "Internal Server error"
     })
 }
