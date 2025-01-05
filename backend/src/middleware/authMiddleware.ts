@@ -15,7 +15,7 @@ if (!JWT_SECRET) {
   throw new Error("Jwt Secret not present")
 }
 
-const authMiddleware = async (req: IcustomReq, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: IcustomReq, res: Response, next: NextFunction) => {
   const token = req.headers["authorization"];
   if (!token) {
      res.send({
@@ -43,4 +43,3 @@ const authMiddleware = async (req: IcustomReq, res: Response, next: NextFunction
   }
 };
 
-export default authMiddleware;

@@ -12,7 +12,7 @@ interface IadminDetail {
     id: string
 }
 interface IcustomadminReq extends Request {
-    adminid: string;
+    adminid?: string;
 }
 
 
