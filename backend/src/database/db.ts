@@ -43,11 +43,11 @@ const Products = new Schema<IProduct>({
   product_id: { type: ObjectId, ref: 'admin' },
   name: { type: String, required: true },
   description: { type: String, required: true },
+  category: { type: String, required: true },
   price: { type: Number, required: true },
   stock: { type: Number, required: true },
   images: [
     {
-      id: { type: String, required: true },
       url: { type: String, required: true }
     }
   ]

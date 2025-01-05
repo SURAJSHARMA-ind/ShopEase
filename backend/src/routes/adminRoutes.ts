@@ -1,9 +1,10 @@
 import Router, { Request, Response } from "express"
-import { adminSignup, adminSignin } from "../validations/userValidation"
+import { adminSignup, requiredSignin } from "../validations/userValidation"
 import { AdminModel } from "../database/db"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import adminMiddleware from "../middleware/adminMiddleware"
+import { tokenVerify } from "../middleware/tokenVerify"
+import { adminMiddleware, sellerMiddleware } from "../middleware/adminMiddleware"
 const router = Router()
 const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET
 if (!ADMIN_JWT_SECRET) {
@@ -11,7 +12,7 @@ if (!ADMIN_JWT_SECRET) {
 }
 
 
-router.post("/create", adminMiddleware,async (req: Request, res: Response) => {
+router.post("/create", tokenVerify, adminMiddleware, async (req: Request, res: Response) => {
     const parsedValue = adminSignup.safeParse(req.body)
     if (!parsedValue.success) {
         res.status(400).json({
@@ -57,7 +58,7 @@ router.post("/create", adminMiddleware,async (req: Request, res: Response) => {
 
 router.post("/signin", async (req: Request, res: Response) => {
 
-    const parsedSigninValue = adminSignin.safeParse(req.body)
+    const parsedSigninValue = requiredSignin.safeParse(req.body)
 
     if (!parsedSigninValue.success) {
         res.status(400).json({
@@ -66,7 +67,7 @@ router.post("/signin", async (req: Request, res: Response) => {
         return
     }
     try {
-        const { email, password, role } = parsedSigninValue.data
+        const { email, password } = parsedSigninValue.data
 
         const admin = await AdminModel.findOne({ email })
         console.log("Admin response is ", admin)
@@ -76,7 +77,6 @@ router.post("/signin", async (req: Request, res: Response) => {
             })
             return
         }
-
         const decryptedPassword = await bcrypt.compare(password, admin.password)
         if (!decryptedPassword) {
             res.status(401).json({

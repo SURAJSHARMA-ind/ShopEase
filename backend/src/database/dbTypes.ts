@@ -20,7 +20,6 @@ interface IAdmin extends IUser {
     role : "admin"|"seller"
 }
  interface IImages {
-    id: string,
     url: string
 }
 
@@ -45,6 +44,7 @@ interface IProduct {
     product_id: mongoose.Schema.Types.ObjectId,
     name: string,
     description: string,
+    category: string,
     price: number,
     stock: number,
     images: IImages[]

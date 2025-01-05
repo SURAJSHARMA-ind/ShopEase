@@ -2,9 +2,9 @@ import express from "express"
 import mongoose from "mongoose";
 import cors from "cors"
 import products from "./products"
-import authRoutes from './routes/auth'
+import authRoutes from './routes/userAuth'
 import adminRoutes from "./routes/adminRoutes"
-
+import productsRoutes from "./routes/products"
 
 const app = express();
 const connectionString = process.env.MONGODB_URI;
@@ -29,6 +29,7 @@ app.get("/products", (req, res) => {
 // User signup & Signin route
 app.use("/api/v1/user", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/products", productsRoutes);
 
 app.listen(port, () => {
   console.log(`Server is listening at : http://${hostname}:${port}/`);
