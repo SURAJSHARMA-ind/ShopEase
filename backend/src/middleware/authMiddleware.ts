@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { UsersModel } from '../database/db'
+import { UsersModel } from '../models/User'
 require("dotenv").config();
 import { Request, Response, NextFunction } from "express";
 

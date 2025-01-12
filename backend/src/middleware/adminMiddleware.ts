@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AdminModel } from "../database/db"
+import { AdminModel } from "../models/Admin"
 
 interface IcustomadminReq extends Request {
     adminid?: string
