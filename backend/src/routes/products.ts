@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { sellerMiddleware } from "../middleware/adminMiddleware";
 import { tokenVerify } from "../middleware/tokenVerify";
-import { productController } from "../controllers/productController";
+import { addProductController, getProductsController } from "../controllers/productController";
 const router = Router();
 
-router.post("/add", tokenVerify, sellerMiddleware, productController)
+// Add product
+router.post("/add", tokenVerify, sellerMiddleware, addProductController)
+// get product
+router.get("/get", getProductsController)
 
 export default router;

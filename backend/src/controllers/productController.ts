@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { requiredProduct } from "../validations/products";
 import { ProductsModel } from "../models/Product";
 
-export const productController = async (req: Request, res: Response) => {
+export const addProductController = async (req: Request, res: Response) => {
     const parsedValue = requiredProduct.safeParse(req.body)
     if (!parsedValue.success) {
         res.status(400).json({
@@ -28,6 +28,24 @@ export const productController = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({
             message: "Internal Server Error",
+            error: error
+        })
+    }
+}
+
+export const getProductsController = async (req: Request, res: Response) => {
+    const page: number = Number(req.query.page) || 1
+    const limit: number = Number(req.query.limit) || 10
+    try {
+        const skip = (page - 1) * limit
+        const productData = await ProductsModel.find().skip(skip).limit(limit)
+
+        res.status(200).json({
+            ProductData: productData
+        })
+
+    } catch (error) {
+        res.status(500).json({
             error: error
         })
     }
