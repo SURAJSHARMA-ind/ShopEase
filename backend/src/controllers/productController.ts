@@ -30,6 +30,7 @@ export const addProductController = async (req: Request, res: Response) => {
             message: "Internal Server Error",
             error: error
         })
+        return
     }
 }
 
@@ -39,7 +40,12 @@ export const getProductsController = async (req: Request, res: Response) => {
     try {
         const skip = (page - 1) * limit
         const productData = await ProductsModel.find().skip(skip).limit(limit)
-
+        if (productData.length === 0) {
+            res.status(404).json({
+                message: "NO product found"
+            })
+            return
+        }
         res.status(200).json({
             ProductData: productData
         })
