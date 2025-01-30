@@ -35,24 +35,31 @@ export const addProductController = async (req: Request, res: Response) => {
 }
 
 export const getProductsController = async (req: Request, res: Response) => {
-    const page: number = Number(req.query.page) || 1
-    const limit: number = Number(req.query.limit) || 10
+    const limit = 2;
+    const cursor = req.query.cursor as string;
+
     try {
-        const skip = (page - 1) * limit
-        const productData = await ProductsModel.find().skip(skip).limit(limit)
-        if (productData.length === 0) {
-            res.status(404).json({
-                message: "NO product found"
-            })
-            return
+        let query = {};
+        if (cursor) {
+            query = { _id: { $gt: cursor } };
         }
+
+        const productData = await ProductsModel.find(query)
+            .sort({ _id: 1 })
+            .limit(limit + 1);
+
+        const hasNextPage = productData.length > limit;
+        const products = hasNextPage ? productData.slice(0, -1) : productData;
+
         res.status(200).json({
-            ProductData: productData
-        })
+            products,
+            nextCursor: hasNextPage ? products[products.length - 1]._id : null,
+            hasNextPage
+        });
 
     } catch (error) {
         res.status(500).json({
             error: error
-        })
+        });
     }
 }
